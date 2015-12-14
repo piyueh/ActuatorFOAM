@@ -1,0 +1,3 @@
+src/actuatorFoam.C
+
+EXE = bin/actuatorFoam
