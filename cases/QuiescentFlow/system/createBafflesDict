@@ -49,7 +49,7 @@ FoamFile
 internalFacesOnly true;
 
 // Optionally do not read/convert/write any fields.
-noFields true;
+noFields false;
 
 
 // Baffles to create.
@@ -57,88 +57,111 @@ baffles
 {
     solidAirInterface
     {
-        //- Use surface to select faces and orientation.
         type        faceZone;
         zoneName    interface;
 
-
-        // Generate patchGroup baffle1 with two patches:
-        //  - baffle1_master
-        //  - baffle1_slave
-        patchs
+        patchPairs
         {
-            master
+            type            patch;
+            patchFields
             {
-                name            airSide;
-                type            cyclic;
-                neighbourPatch  solidSide;
-                patchFields
+                U
                 {
-                    U
-                    {
-                        type            fixedValue;
-                        value           uniform (0 0 0);
-                    }
-                    p
-                    {
-                        type            zeroGradient;
-                    }
-                    ep
-                    {
-                        type            cyclic;
-                    }
-                    rhoc
-                    {
-                        type            cyclic;
-                    }
-                    lambda
-                    {
-                        type            cyclic;
-                    }
-                    eps
-                    {
-                        type            cyclic;
-                    }
+                    type            fixedValue;
+                    value           uniform (0 0 0);
                 }
-            }
-
-            slave
-            {
-                name            solidSide;
-                type            cyclic;
-                neighbourPatch  airSide;
-                patchFields
+                p
                 {
-                    U
-                    {
-                        type            fixedValue;
-                        value           uniform (0 0 0);
-                    }
-                    p
-                    {
-                        type            zeroGradient;
-                    }
-                    ep
-                    {
-                        type            cyclic;
-                    }
-                    rhoc
-                    {
-                        type            cyclic;
-                    }
-                    lambda
-                    {
-                        type            cyclic;
-                    }
-                    eps
-                    {
-                        type            cyclic;
-                    }
+                    type            zeroGradient;
                 }
             }
         }
+
+        }
     }
 }
-
+// baffles
+//     solidAirInterface
+//   {
+//       //- Use surface to select faces and orientation.
+//       type        faceZone;
+//       zoneName    interface;
+// 
+//       // Generate patchGroup baffle1 with two patches:
+//       //  - baffle1_master
+//       //  - baffle1_slave
+//       patches
+//       {
+//           master
+//           {
+//               name            airSide;
+//               type            cyclic;
+//               neighbourPatch  solidSide;
+//               patchFields
+//               {
+//                   U
+//                   {
+//                       type            fixedValue;
+//                       value           uniform (0 0 0);
+//                   }
+//                   p
+//                   {
+//                       type            zeroGradient;
+//                   }
+//                   ep
+//                   {
+//                       type            cyclic;
+//                   }
+//                   rhoc
+//                   {
+//                       type            cyclic;
+//                   }
+//                   lambda
+//                   {
+//                       type            cyclic;
+//                   }
+//                   eps
+//                   {
+//                       type            cyclic;
+//                   }
+//               }
+//           }
+//             slave
+//           {
+//               name            solidSide;
+//               type            cyclic;
+//               neighbourPatch  airSide;
+//               patchFields
+//               {
+//                   U
+//                   {
+//                       type            fixedValue;
+//                       value           uniform (0 0 0);
+//                   }
+//                   p
+//                   {
+//                       type            zeroGradient;
+//                   }
+//                   ep
+//                   {
+//                       type            cyclic;
+//                   }
+//                   rhoc
+//                   {
+//                       type            cyclic;
+//                   }
+//                   lambda
+//                   {
+//                       type            cyclic;
+//                   }
+//                   eps
+//                   {
+//                       type            cyclic;
+//                   }
+//               }
+//           }
+//       }
+//   }
+// 
 
 // ************************************************************************* //
