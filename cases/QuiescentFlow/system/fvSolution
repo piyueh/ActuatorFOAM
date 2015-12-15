@@ -20,7 +20,20 @@ solvers
     ep
     {
         solver          PCG;
-        preconditioner  GAMG;
+        preconditioner  FDIC; 
+        //{
+        //    preconditioner      GAMG;
+        //    smoother        DICGaussSeidel;
+        //    tolerance       1e-03;
+        //    relTol          0;
+        //    nPreSweeps      0;
+        //    nPostSweeps     2;
+        //    nFinestSweeps   2;
+        //    cachedAgglomeration     true;
+        //    nCellsInCoarsetLevel    10;
+        //    agglomerator    faceAreaPair;
+        //    mergeLevels     1;
+        //}
         tolerance       1e-08;
         relTol          0;
         maxIter         5000;
@@ -47,7 +60,7 @@ solvers
     p
     {
         solver          PCG;
-        preconditioner  GAMG;
+        preconditioner  FDIC;
         tolerance       1e-08;
         relTol          0;
         maxIter         5000;

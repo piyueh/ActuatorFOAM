@@ -1,7 +1,7 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  3.0.0                                 |
+|  \\    /   O peration     | Version:  3.0.x                                 |
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
@@ -11,39 +11,35 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      fvSchemes;
+    object      decomposeParDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-ddtSchemes
+numberOfSubdomains 12;
+
+method          simple;
+
+simpleCoeffs
 {
-    default         Euler;
+    n               (3 4 1);
+    delta           0.001;
 }
 
-gradSchemes
+hierarchicalCoeffs
 {
-    default         Gauss linear;
+    n               (1 1 1);
+    delta           0.001;
+    order           xyz;
 }
 
-divSchemes
+manualCoeffs
 {
-    default         Gauss upwind;
+    dataFile        "";
 }
 
-laplacianSchemes
-{
-    default         Gauss linear corrected;
-}
+distributed     no;
 
-interpolationSchemes
-{
-    default         linear;
-}
-
-snGradSchemes
-{
-    default         corrected;
-}
+roots           ( );
 
 
 // ************************************************************************* //
