@@ -1,0 +1,166 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  3.0.x                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      changeDictionaryDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dictionaryReplacement
+{
+    U
+    {
+        internalField   uniform (0 0 0);
+
+        boundaryField
+        {
+            air_left
+            {
+                type            advective;
+            }
+            air_right
+            {
+                type            advective;
+            }
+            air_up
+            {
+                type            advective;
+            }
+            zfaces
+            {
+                type            empty;
+            }
+            actuator1_surface
+            {
+                type            fixedValue;
+                value           uniform (0 0 0);
+            }
+            air_to_solid
+            {
+                type            fixedValue;
+                value           uniform (0 0 0);
+            }
+        }
+    }
+
+    p
+    {
+        internalField   uniform 0;
+
+        boundaryField
+        {
+            air_left
+            {
+                type            advective;
+            }
+            air_right
+            {
+                type            advective;
+            }
+            air_up
+            {
+                type            advective;
+            }
+            zfaces
+            {
+                type            empty;
+            }
+            actuator1_surface
+            {
+                type            zeroGradient;
+            }
+            air_to_solid
+            {
+                type            zeroGradient;
+            }
+        }
+    }
+
+    ep
+    {
+        internalField   uniform 0;
+
+        boundaryField
+        {
+            air_left
+            {
+                type            zeroGradient;
+            }
+            air_right
+            {
+                type            zeroGradient;
+            }
+            air_up
+            {
+                type            zeroGradient;
+            }
+            actuator1_surface
+            {
+                type            fixedValue;
+                value           uniform 1;
+            }
+            zfaces
+            {
+                type            empty;
+            }
+            air_to_solid
+            {
+                type            compressible::turbulentTemperatureCoupledBaffleMixed;
+                Tnbr            ep;
+                kappa           lookup;
+                kappaName       epsField;
+                value           uniform 0;
+            }
+        }
+    }
+
+    rhoc
+    {
+        internalField   uniform 0;
+
+        boundaryField
+        {
+            air_left
+            {
+                type            fixedValue;
+                value           uniform 0;
+            }
+            air_right
+            {
+                type            fixedValue;
+                value           uniform 0;
+            }
+            air_up
+            {
+                type            fixedValue;
+                value           uniform 0;
+            }
+            actuator1_surface
+            {
+                type            zeroGradient;
+            }
+            zfaces
+            {
+                type            empty;
+            }
+            air_to_solid
+            {
+                type            compressible::turbulentTemperatureCoupledBaffleMixed;
+                Tnbr            rhoc;
+                kappa           lookup;
+                kappaName       epsField;
+                value           uniform 0;
+            }
+        }
+    }
+}
+
+// ************************************************************************* //
