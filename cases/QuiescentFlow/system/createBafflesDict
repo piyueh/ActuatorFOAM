@@ -1,0 +1,144 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  3.0.0                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      createBafflesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Sample for creating baffles:
+// - usually converting internal faces into two boundary faces
+// - or converting boundary faces into a boundary face
+//   (internalFacesOnly=false)(though should use really createPatch
+//    to do this)
+//
+// - selection of faces (and orientation) to 'baffle' through:
+//      faceZone:
+//          type        faceZone;
+//          zoneName    f0;
+//      searchableSurface:
+//          type        searchableSurface;
+//          surface     triSurfaceMesh;
+//          name        baffle1D.stl;
+//
+// - specification of patches for baffle sides in one of two modes:
+//      - patchPairs : create two patches of same type, same input
+//      - patches    : create patches separately, full control over what
+//                     to create on what side
+//                     (this mode can also create duplicate (overlapping)
+//                      sets of baffles:
+//                      - internalFacesOnly = false
+//                      - have 4 entries in patches:
+//                          - master
+//                          - slave
+//                          - additional master
+//                          - additional slave)
+
+
+// Whether to convert internal faces only (so leave boundary faces intact).
+// This is only relevant if your face selection type can pick up boundary
+// faces.
+internalFacesOnly true;
+
+// Optionally do not read/convert/write any fields.
+noFields true;
+
+
+// Baffles to create.
+baffles
+{
+    solidAirInterface
+    {
+        //- Use surface to select faces and orientation.
+        type        faceZone;
+        zoneName    interface;
+
+
+        // Generate patchGroup baffle1 with two patches:
+        //  - baffle1_master
+        //  - baffle1_slave
+        patchs
+        {
+            master
+            {
+                name            airSide;
+                type            cyclic;
+                neighbourPatch  solidSide;
+                patchFields
+                {
+                    U
+                    {
+                        type            fixedValue;
+                        value           uniform (0 0 0);
+                    }
+                    p
+                    {
+                        type            zeroGradient;
+                    }
+                    ep
+                    {
+                        type            cyclic;
+                    }
+                    rhoc
+                    {
+                        type            cyclic;
+                    }
+                    lambda
+                    {
+                        type            cyclic;
+                    }
+                    eps
+                    {
+                        type            cyclic;
+                    }
+                }
+            }
+
+            slave
+            {
+                name            solidSide;
+                type            cyclic;
+                neighbourPatch  airSide;
+                patchFields
+                {
+                    U
+                    {
+                        type            fixedValue;
+                        value           uniform (0 0 0);
+                    }
+                    p
+                    {
+                        type            zeroGradient;
+                    }
+                    ep
+                    {
+                        type            cyclic;
+                    }
+                    rhoc
+                    {
+                        type            cyclic;
+                    }
+                    lambda
+                    {
+                        type            cyclic;
+                    }
+                    eps
+                    {
+                        type            cyclic;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+// ************************************************************************* //
