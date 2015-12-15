@@ -1,7 +1,28 @@
 EXE_INC = \
     -I$(WM_PROJECT_DIR)/src/finiteVolume/lnInclude \
-    -I$(WM_PROJECT_DIR)/src/meshTools/lnInclude
+    -I$(WM_PROJECT_DIR)/src/meshTools/lnInclude \
+    -I$(WM_PROJECT_DIR)/src/sampling/lnInclude \
+    -I$(WM_PROJECT_DIR)/src/transportModels/compressible/lnInclude \
+    -I$(WM_PROJECT_DIR)/src/thermophysicalModels/basic/lnInclude \
+    -I$(WM_PROJECT_DIR)/src/thermophysicalModels/specie/lnInclude \
+    -I$(WM_PROJECT_DIR)/src/thermophysicalModels/solidThermo/lnInclude \
+    -I$(WM_PROJECT_DIR)/src/TurbulenceModels/turbulenceModels/lnInclude \
+    -I$(WM_PROJECT_DIR)/src/TurbulenceModels/compressible/lnInclude \
+    -I$(WM_PROJECT_DIR)/src/thermophysicalModels/radiation/lnInclude \
+    -I$(WM_PROJECT_DIR)/src/fvOptions/lnInclude \
+    -I$(WM_PROJECT_DIR)/src/regionModels/regionModel/lnInclude
 
 EXE_LIBS = \
     -lfiniteVolume \
-    -lmeshTools
+    -lmeshTools \
+    -lregionModels \
+    -lturbulenceModels \
+    -lcompressibleTransportModels \
+    -lfluidThermophysicalModels \
+    -lsolidThermo \
+    -lspecie \
+    -lturbulenceModels \
+    -lcompressibleTurbulenceModels \
+    -lradiationModels \
+    -lfvOptions \
+    -lsampling
