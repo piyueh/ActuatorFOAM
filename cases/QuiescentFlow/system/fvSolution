@@ -17,7 +17,7 @@ FoamFile
 
 solvers
 {
-    phi
+    ep
     {
         solver          PCG;
         preconditioner  GAMG;
@@ -26,7 +26,7 @@ solvers
         maxIter         5000;
     }
 
-    rho
+    rhoc
     {
         solver          PCG;
         preconditioner  FDIC;
