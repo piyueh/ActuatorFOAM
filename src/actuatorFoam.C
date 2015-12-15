@@ -29,8 +29,12 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvCFD.H"
-#include "pisoControl.H"
+# include "fvCFD.H"
+# include "pisoControl.H"
+# include "regionProperties.H"
+
+# include "turbulentTemperatureCoupledBaffleMixedFvPatchScalarField.H"
+# include "temperatureCoupledBase.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -38,44 +42,103 @@ int main(int argc, char *argv[])
 {
     #include "setRootCase.H"
     #include "createTime.H"
-    #include "createMesh.H"
 
-    pisoControl piso(mesh);
+    regionProperties    rp(runTime);
 
-    #include "createFields.H"
-    #include "initContinuityErrs.H"
+    if (rp["fluid"].size() > 1)
+    {
+        cerr << "This solver currently doesn't "
+             << "support more than one fluid region!!" << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    if (rp["solid"].size() > 1)
+    {
+        cerr << "This solver currently doesn't "
+             << "support more than one fluid region!!" << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    # include "createRegionMeshes.H"
+    # include "createSolverControls.H"
+    # include "createParameters.H"
+    # include "createRegionFields.H"
+
+    # include "initContinuityErrs.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
       
-      
-    Info<< "\nCalculating dimensionless electric potential ep\n" << endl;
+    Info<< "\nCalculating dimensionless electric potential, ep\n" << endl;
 
-    solve
-    (
-        fvm::laplacian(eps, ep)
-    );
+    scalar          initRes1 = 1.,
+                    initRes2 = 1.;
+
+    int             maxI = 0;
+
+    
+    while (((initRes1 > 1e-3) || (initRes2 > 1e-3)) && (maxI < 1000000))
+    {
+        maxI ++;
+        Info<< "Iteration = " << maxI << nl << endl;
+
+        initRes1 = solve
+        (
+            fvm::laplacian(epFluid)
+        ).initialResidual();
+
+        initRes2 = solve
+        (
+            fvm::laplacian(epSolid)
+        ).initialResidual();
+    }
+
+    if (maxI == 1000000)
+    {
+        cerr << "Electric potential solver diverged!" << endl;
+        exit(EXIT_FAILURE);
+    }
 
 
-    Info<< "\nCalculating dimensionless volumetric charge densitym rhoc\n" << endl;
+    Info<< "\nCalculating dimensionless charge density, rhoc\n" << endl;
 
-    solve
-    (
-        fvm::laplacian(eps, rhoc) - rhoc / (lambda * lambda)
-    );
+    initRes1 = 1.;
+    initRes2 = 1.;
+    maxI = 0;
 
-    Info<< "\nCalculating dimensionless electric field\n" << endl;
+    while (((initRes1 > 1e-3) || (initRes2 > 1e-3)) && (maxI < 1000000))
+    {
+        maxI ++;
+        Info<< "Iteration = " << maxI << nl << endl;
 
-    volVectorField E
+        initRes1 = solve
+        (
+            fvm::laplacian(rhocFluid) 
+                == fvm::Sp(1. / (lambdaFluid * lambdaFluid * epsFluid), rhocFluid)
+        ).initialResidual();
+
+        initRes2 = solve
+        (
+            fvm::laplacian(rhocSolid) 
+        ).initialResidual();
+    }
+
+    if (maxI == 1000000)
+    {
+        cerr << "Charge Density solver diverged!" << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    volVectorField EFluid
     (
         IOobject
         (
-            "E",
+            "EFluid",
             runTime.timeName(),
-            mesh,
+            fluidMesh,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        - fvc::grad(ep)
+        - fvc::grad(epFluid)
     );
 
 
@@ -84,25 +147,27 @@ int main(int argc, char *argv[])
     dimensionedScalar pseudoRho
     (
         "pseudoScalar",
-        dimensionSet(1, 3, 0, 0, 0, 0, 0),
+        dimensionSet(1, -3, 0, 0, 0, 0, 0),
         1.0
     );
 
-    volVectorField force
+    volVectorField fFluid
     (
         IOobject
         (
-            "force",
+            "fFluid",
             runTime.timeName(),
-            mesh,
+            fluidMesh,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        rhocMax * epMax * rhoc * E / pseudoRho
+        rhocMax * epMax * rhocFluid * EFluid / pseudoRho
     );
 
-
-
+    fvMesh  &mesh = fluidMesh;
+    volScalarField      &p = pFluid;
+    volVectorField      &U = UFluid;
+    dimensionedScalar   &nu = nuFluid;
 
     Info<< "\nStarting time loop\n" << endl;
 
@@ -126,8 +191,9 @@ int main(int argc, char *argv[])
             Info << "Solve momentum predictor" << endl;
             solve
             (
-                UEqn == -fvc::grad(p) + 
-                    force * std::pow(std::sin(2 * M_PI * runTime.value()), 2)
+                UEqn == - fvc::grad(p) + 
+                    fFluid * std::pow(
+                        std::sin(2 * M_PI * omega.value() * runTime.value()), 2)
             ); 
         }
 
@@ -181,9 +247,15 @@ int main(int argc, char *argv[])
     }
 
     Info<< "End\n" << endl;
+    
+      
+      
 
     return 0;
 }
 
+/*
 
+
+    */
 // ************************************************************************* //
