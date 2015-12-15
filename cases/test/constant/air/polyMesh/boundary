@@ -9,63 +9,55 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volScalarField;
-    location    "0";
-    object      lambda;
+    class       polyBoundaryMesh;
+    location    "constant/air/polyMesh";
+    object      boundary;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 0 0 0 0 0];
-
-internalField   uniform 0;
-
-boundaryField
-{
+6
+(
     air_left
     {
-        type            fixedValue;
-        value           uniform 1.7E-4;
+        type            patch;
+        nFaces          236;
+        startFace       804879;
     }
     air_up
     {
-        type            fixedValue;
-        value           uniform 1.7E-4;
+        type            patch;
+        nFaces          1720;
+        startFace       805115;
     }
     air_right
     {
-        type            fixedValue;
-        value           uniform 1.7E-4;
-    }
-    solid_left
-    {
-        type            fixedValue;
-        value           uniform 1E14;
-    }
-    solid_bottom
-    {
-        type            fixedValue;
-        value           uniform 1E14;
-    }
-    solid_right
-    {
-        type            fixedValue;
-        value           uniform 1E14;
+        type            patch;
+        nFaces          236;
+        startFace       806835;
     }
     actuator1_surface
     {
-        type            fixedValue;
-        value           uniform 1.7E-4;
-    }
-    actuator2_surface
-    {
-        type            fixedValue;
-        value           uniform 1E14;
+        type            patch;
+        nFaces          510;
+        startFace       807071;
     }
     zfaces
     {
         type            empty;
+        inGroups        1(empty);
+        nFaces          806840;
+        startFace       807581;
     }
-}
-
+    air_to_solid
+    {
+        type            mappedWall;
+        inGroups        1(wall);
+        nFaces          1220;
+        startFace       1614421;
+        sampleMode      nearestPatchFace;
+        sampleRegion    solid;
+        samplePatch     solid_to_air;
+    }
+)
 
 // ************************************************************************* //

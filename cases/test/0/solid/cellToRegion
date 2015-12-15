@@ -10,60 +10,45 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    location    "0";
-    object      eps;
+    location    "0/solid";
+    object      cellToRegion;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [0 0 0 0 0 0 0];
 
-internalField   uniform 1; 
+internalField   uniform 0;
 
 boundaryField
 {
-    air_left
-    {
-        type            fixedValue;
-        value           uniform 1;
-    }
-    air_up
-    {
-        type            fixedValue;
-        value           uniform 1;
-    }
-    air_right
-    {
-        type            fixedValue;
-        value           uniform 1;
-    }
     solid_left
     {
-        type            fixedValue;
-        value           uniform 2.7;
+        type            zeroGradient;
     }
     solid_bottom
     {
-        type            fixedValue;
-        value           uniform 2.7;
+        type            zeroGradient;
     }
     solid_right
     {
-        type            fixedValue;
-        value           uniform 2.7;
+        type            zeroGradient;
     }
     actuator1_surface
     {
-        type            fixedValue;
-        value           uniform 1;
+        type            zeroGradient;
     }
     actuator2_surface
     {
-        type            fixedValue;
-        value           uniform 2.7;
+        type            zeroGradient;
     }
     zfaces
     {
         type            empty;
+    }
+    solid_to_air
+    {
+        type            calculated;
+        value           uniform 0;
     }
 }
 

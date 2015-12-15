@@ -10,38 +10,40 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      setFieldsDict;
+    location    "system";
+    object      fvSchemes;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-defaultFieldValues
-(
-    volScalarFieldValue eps 1
-    volScalarFieldValue lambda 1
-);
+ddtSchemes
+{
+    default         Euler;
+}
 
-regions
-(
-    zoneToCell
-    {
-        name solid;
+gradSchemes
+{
+    default         Gauss linear;
+}
 
-        fieldValues
-        (
-            volScalarFieldValue eps 2.7
-            volScalarFieldValue lambda 1E14
-        );
-    }
-    zoneToCell
-    {
-        name air;
+divSchemes
+{
+    default         Gauss upwind;
+}
 
-        fieldValues
-        (
-            volScalarFieldValue eps 1
-            volScalarFieldValue lambda 1.7E-4
-        );
-    }
-);
+laplacianSchemes
+{
+    default         Gauss linear corrected;
+}
+
+interpolationSchemes
+{
+    default         linear;
+}
+
+snGradSchemes
+{
+    default         corrected;
+}
+
 
 // ************************************************************************* //
