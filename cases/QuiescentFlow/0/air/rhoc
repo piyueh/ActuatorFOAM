@@ -39,7 +39,7 @@ boundaryField
     actuator1_surface
     {
         type            zeroGradient;
-        value           0;
+        value           uniform 0;
     }
     zfaces
     {
