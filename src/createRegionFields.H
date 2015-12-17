@@ -13,6 +13,15 @@ IOdictionary fluidProperties
     )
 );
 
+Info << "....density, rho" << endl;
+dimensionedScalar rhoFluid
+(
+    "rhoFluid",
+    dimensionSet(1, -3, 0, 0, 0, 0, 0),
+    fluidProperties.lookup("rho")
+);
+Info << "    rho = " << rhoFluid << endl;
+
 Info << "....kinematic viscosity, nu" << endl;
 dimensionedScalar nuFluid
 (
