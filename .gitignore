@@ -6,3 +6,9 @@ Make/linux64GccDPInt32Opt/
 bin/
 
 **/polyMesh/
+cases/QuiescentFlow/LowTol
+cases/QuiescentFlow/run2
+**/0.*/
+**/*e-*/
+**/0/air/
+**/0/solid/
