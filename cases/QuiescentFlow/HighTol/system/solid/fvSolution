@@ -20,7 +20,7 @@ solvers
     ep
     {
         solver          smoothSolver;
-        smoother        symGaussSeidel;
+        smoother        nonBlockingGaussSeidel;
         tolerance       1e-08;
         relTol          0;
         maxIter         10;
@@ -29,35 +29,17 @@ solvers
     rhoc
     {
         solver          smoothSolver;
-        smoother        DICGaussSeidel;
+        smoother        nonBlockingGaussSeidel;
         tolerance       1e-08;
         relTol          0;
-        maxIter         1;
-    }
-    
-    U
-    {
-        solver          smoothSolver;
-        smoother        GaussSeidel;
-        tolerance       1e-08;
-        relTol          0;
-        maxIter         5000;
-    }
-
-    p
-    {
-        solver          PCG;
-        preconditioner  FDIC;
-        tolerance       1e-08;
-        relTol          0;
-        maxIter         5000;
+        maxIter         10;
     }
 }
 
 PISO
 {
     nCorrector  2;
-    nNonOrthogonalCorrectors 1;
+    nNonOrthogonalCorrectors 0;
     pRefCell    0;
     pRefValue   0;
 }

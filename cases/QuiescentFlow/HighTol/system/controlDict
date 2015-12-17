@@ -10,18 +10,40 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "constant";
-    object      transportProperties;
+    location    "system";
+    object      controlDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// kinematic viscosity of air
-nu          [0 2 -1 0 0 0 0]    1.568E-5;
+application     actuatorFoam;
 
-// relative permitivity
-eps         [0 0 0 0 0 0 0]     1;
+startFrom       startTime;
 
-// Debye length
-lambda      [0 1 0 0 0 0 0]     1.7E-4;
+startTime       0;
+
+stopAt          endTime;
+
+endTime         0.0005;
+
+deltaT          5e-7;
+
+writeControl    runTime;
+
+writeInterval   0.00001;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable true;
+
 
 // ************************************************************************* //

@@ -8,14 +8,14 @@
 FoamFile
 {
     version     2.0;
-    format      ascii;
+    format      binary;
     class       volScalarField;
-    location    "0/air";
-    object      ep;
+    location    "0";
+    object      p;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [ 1 2 -3 0 0 -1 0 ];
+dimensions      [ 0 2 -2 0 0 0 0 ];
 
 internalField   uniform 0;
 
@@ -23,32 +23,43 @@ boundaryField
 {
     air_left
     {
-        type            zeroGradient;
+        type            advective;
     }
     air_up
     {
-        type            zeroGradient;
+        type            advective;
     }
     air_right
     {
-        type            zeroGradient;
+        type            advective;
+    }
+    solid_left
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+    solid_bottom
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+    solid_right
+    {
+        type            fixedValue;
+        value           uniform 0;
     }
     actuator1_surface
     {
+        type            zeroGradient;
+    }
+    actuator2_surface
+    {
         type            fixedValue;
-        value           uniform 1;
+        value           uniform 0;
     }
     zfaces
     {
         type            empty;
-    }
-    air_to_solid
-    {
-        type            compressible::turbulentTemperatureCoupledBaffleMixed;
-        value           uniform 0;
-        Tnbr            ep;
-        kappa           lookup;
-        kappaName       epsField;
     }
 }
 
