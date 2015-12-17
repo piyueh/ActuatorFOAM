@@ -1,0 +1,194 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  3.0.x                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      changeDictionaryDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dictionaryReplacement
+{
+    U
+    {
+        internalField   uniform (0 0 0);
+
+        boundaryField
+        {
+            solid_left
+            {
+                type            fixedValue;
+                value           uniform (0 0 0);
+            }
+            solid_right
+            {
+                type            fixedValue;
+                value           uniform (0 0 0);
+            }
+            solid_bottom
+            {
+                type            fixedValue;
+                value           uniform (0 0 0);
+            }
+            zfaces
+            {
+                type            empty;
+            }
+            actuator1_surface
+            {
+                type            fixedValue;
+                value           uniform (0 0 0);
+            }
+            actuator2_surface
+            {
+                type            fixedValue;
+                value           uniform (0 0 0);
+            }
+            solid_to_air
+            {
+                type            fixedValue;
+                value           uniform (0 0 0);
+            }
+        }
+    }
+
+    p
+    {
+        internalField   uniform 0;
+
+        boundaryField
+        {
+            solid_left
+            {
+                type            fixedValue;
+                value           uniform 0;
+            }
+            solid_right
+            {
+                type            fixedValue;
+                value           uniform 0;
+            }
+            solid_bottom
+            {
+                type            fixedValue;
+                value           uniform 0;
+            }
+            zfaces
+            {
+                type            empty;
+            }
+            actuator1_surface
+            {
+                type            fixedValue;
+                value           uniform 0;
+            }
+            actuator2_surface
+            {
+                type            fixedValue;
+                value           uniform 0;
+            }
+            solid_to_air
+            {
+                type            fixedValue;
+                value           uniform 0;
+            }
+        }
+    }
+
+    ep
+    {
+        internalField   uniform 0;
+
+        boundaryField
+        {
+            solid_left
+            {
+                type            zeroGradient;
+            }
+            solid_right
+            {
+                type            zeroGradient;
+            }
+            solid_bottom
+            {
+                type            zeroGradient;
+            }
+            actuator1_surface
+            {
+                type            fixedValue;
+                value           uniform 1;
+            }
+            actuator2_surface
+            {
+                type            fixedValue;
+                value           uniform 0;
+            }
+            zfaces
+            {
+                type            empty;
+            }
+            solid_to_air
+            {
+                type            compressible::turbulentTemperatureCoupledBaffleMixed;
+                Tnbr            ep;
+                kappa           lookup;
+                kappaName       epsField;
+                value           uniform 0;
+            }
+        }
+    }
+
+    rhoc
+    {
+        internalField   uniform 0;
+
+        boundaryField
+        {
+            solid_left
+            {
+                type            fixedValue;
+                value           uniform 0;
+            }
+            solid_right
+            {
+                type            fixedValue;
+                value           uniform 0;
+            }
+            solid_bottom
+            {
+                type            fixedValue;
+                value           uniform 0;
+            }
+            actuator1_surface
+            {
+                type            zeroGradient;
+            }
+            actuator2_surface
+            {
+                type            fixedValue;
+                value           uniform 1;
+            }
+            zfaces
+            {
+                type            empty;
+            }
+            solid_to_air
+            {
+                type            compressible::turbulentTemperatureCoupledBaffleMixed;
+                Tnbr            rhoc;
+                kappa           lookup;
+                kappaName       epsField;
+                value           uniform 0;
+            }
+        }
+    }
+}
+
+// ************************************************************************* //
