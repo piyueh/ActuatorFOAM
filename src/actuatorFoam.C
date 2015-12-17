@@ -70,13 +70,12 @@ int main(int argc, char *argv[])
       
     Info<< "\nCalculating dimensionless electric potential, ep\n" << endl;
 
-    scalar          initRes1 = 1.,
-                    initRes2 = 1.;
+    scalar          initRes1 = 1.;
 
     int             maxI = 0;
 
     
-    while (((initRes1 > 1e-3) || (initRes2 > 1e-3)) && (maxI < 1000000))
+    while ((initRes1 > 5e-5) && (maxI < 10000))
     {
         maxI ++;
         Info<< "Iteration = " << maxI << nl << endl;
@@ -86,10 +85,10 @@ int main(int argc, char *argv[])
             fvm::laplacian(epFluid)
         ).initialResidual();
 
-        initRes2 = solve
+        solve
         (
             fvm::laplacian(epSolid)
-        ).initialResidual();
+        );
     }
 
     if (maxI == 1000000)
@@ -102,13 +101,17 @@ int main(int argc, char *argv[])
     Info<< "\nCalculating dimensionless charge density, rhoc\n" << endl;
 
     initRes1 = 1.;
-    initRes2 = 1.;
     maxI = 0;
 
-    while (((initRes1 > 1e-3) || (initRes2 > 1e-3)) && (maxI < 1000000))
+    while ((initRes1 > 1e-7) && (maxI < 10000))
     {
         maxI ++;
         Info<< "Iteration = " << maxI << nl << endl;
+
+        solve
+        (
+            fvm::laplacian(rhocSolid) 
+        );
 
         initRes1 = solve
         (
@@ -116,10 +119,6 @@ int main(int argc, char *argv[])
                 == fvm::Sp(1. / (lambdaFluid * lambdaFluid * epsFluid), rhocFluid)
         ).initialResidual();
 
-        initRes2 = solve
-        (
-            fvm::laplacian(rhocSolid) 
-        ).initialResidual();
     }
 
     if (maxI == 1000000)
@@ -144,13 +143,6 @@ int main(int argc, char *argv[])
 
     Info<< "\nCalculating time-independent force field\n" << endl;
 
-    dimensionedScalar pseudoRho
-    (
-        "pseudoScalar",
-        dimensionSet(1, -3, 0, 0, 0, 0, 0),
-        1.0
-    );
-
     volVectorField fFluid
     (
         IOobject
@@ -161,7 +153,7 @@ int main(int argc, char *argv[])
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        rhocMax * epMax * rhocFluid * EFluid / pseudoRho
+        rhocMax * epMax * rhocFluid * EFluid / rhoFluid
     );
 
     fvMesh  &mesh = fluidMesh;
